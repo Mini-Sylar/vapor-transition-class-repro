@@ -11,25 +11,37 @@ npm install --legacy-peer-deps
 npm run dev
 ```
 
-Open the printed local URL. Two boxes render, both wrapping the **exact same**
-`class="external-class"` usage from `App.vue`, both rendering a component
-with an internal `class="box internal-box"` on its own root. The only
-difference between `ChildNoTransition.vue` and `ChildWithTransition.vue` is
-whether that root is wrapped in `<Transition>`.
+Open the printed local URL. Four boxes render, all wrapping the **exact
+same** `class="external-class"` usage from their parent, all rendering a
+component with an internal `class="box internal-box"` on its own root:
+
+- (A) `ChildNoTransition.vue`, mounted via `createVaporApp`
+- (B) `ChildWithTransition.vue` — identical to (A), root wrapped in
+  `<Transition>` — mounted via `createVaporApp`
+- (C) `VdomChildWithTransition.vue` — identical markup to (B) — mounted via
+  plain `createApp` (regular VDOM)
+- (D) `VdomChildNoTransition.vue` — identical to (A) — mounted via
+  `createApp`
+
+The only variable between (A)/(B) and between (C)/(D) is the presence of
+`<Transition>`. The only variable between (B) and (C) is Vapor vs. VDOM.
 
 ## What is expected?
 
-Both boxes keep their internal styling (green background/border) *and* pick
-up `external-class`, exactly like Vue DOM already does for the same source —
-see `src/ChildWithTransition.vue` rendered through the vdom compiler instead
-of Vapor: `class="external-class box internal-box"`.
+All four boxes keep their internal styling (green background/border) *and*
+pick up `external-class`: `class="external-class box internal-box"`.
 
 ## What actually happens?
 
-- `ChildNoTransition` (A): `class="external-class box internal-box"` — correct.
-- `ChildWithTransition` (B): `class="external-class"` — **`box` and
+- (A) Vapor, no `<Transition>`: `class="external-class box internal-box"` — correct.
+- (B) Vapor, `<Transition>`-wrapped: `class="external-class"` — **`box` and
   `internal-box` are both gone**, not merged, not partially applied. Silently
   overwritten.
+- (C) VDOM, `<Transition>`-wrapped: `class="external-class box internal-box"` — correct.
+- (D) VDOM, no `<Transition>`: `class="external-class box internal-box"` — correct.
+
+(B) is the only failure. Same Vue version, same source shape, only the
+render pipeline (Vapor vs. VDOM) differs.
 
 ## Root cause
 

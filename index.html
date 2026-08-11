@@ -41,11 +41,16 @@
   <body>
     <h1>Vapor <code>&lt;Transition&gt;</code> class-merge bug</h1>
     <p>
-      Both boxes below render the exact same <code>Child.vue</code>, with the exact same
-      <code>&lt;App class="external-class"&gt;</code> usage — the only difference is whether
-      <code>Child</code>'s root wraps its content in <code>&lt;Transition&gt;</code>.
+      All four boxes below render the same content with the same
+      <code>class="external-class"</code> usage from the parent. (A) and (B) are mounted via
+      <code>createVaporApp</code>; (C) and (D) are the exact same markup, mounted separately via
+      plain <code>createApp</code> (regular VDOM) for direct comparison. Only (B) — Vapor, root
+      wrapped in <code>&lt;Transition&gt;</code> — is broken.
     </p>
     <div id="app"></div>
+    <hr />
+    <p><strong>Regular VDOM mount, for comparison:</strong></p>
+    <div id="app-vdom"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
