@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vapor Transition class-merge bug</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 2rem;
+        max-width: 42rem;
+        margin: 0 auto;
+      }
+      .box {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-block-end: 1rem;
+      }
+      /* the component's OWN internal styling — should always apply */
+      .internal-box {
+        background: #dcfce7;
+        border: 2px solid #16a34a;
+      }
+      /* an external class a consumer passes in — should ADD to, not replace, internal-box */
+      .external-class {
+        font-weight: 700;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 0.1rem 0.35rem;
+        border-radius: 4px;
+      }
+      pre {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Vapor <code>&lt;Transition&gt;</code> class-merge bug</h1>
+    <p>
+      Both boxes below render the exact same <code>Child.vue</code>, with the exact same
+      <code>&lt;App class="external-class"&gt;</code> usage — the only difference is whether
+      <code>Child</code>'s root wraps its content in <code>&lt;Transition&gt;</code>.
+    </p>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
